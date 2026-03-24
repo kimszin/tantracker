@@ -1,0 +1,1 @@
+import{j as r}from"./main-q4UYnNOA.js";const n=({error:o})=>(console.log(o),r.jsx("div",{className:"text-3xl text-muted-foreground",children:"Oops! Transaction not found."}));export{n as errorComponent};
