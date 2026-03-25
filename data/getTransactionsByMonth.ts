@@ -7,14 +7,9 @@ import { format } from "date-fns"
 import { and, desc, eq, gte, lte } from "drizzle-orm"
 import { z } from "zod"
 
-const today = new Date()
-
 const schema = z.object({
   month: z.number().min(1).max(12),
-  year: z
-    .number()
-    .min(today.getFullYear() - 100)
-    .max(today.getFullYear()),
+  year: z.number().min(1900).max(3000),
 })
 
 export const getTransactionsByMonth = createServerFn({

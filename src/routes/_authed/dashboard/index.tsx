@@ -7,14 +7,11 @@ import { z } from "zod"
 import { Cashflow } from "./-cashflow"
 import { RecentTransactions } from "./-recent-transactions"
 
-const today = new Date()
-
 const searchSchema = z.object({
   cfyear: z
     .number()
-    .min(today.getFullYear() - 100)
-    .max(today.getFullYear())
-    .catch(today.getFullYear())
+    .min(1900)
+    .max(3000)
     .optional(),
 })
 
@@ -29,19 +26,20 @@ export const Route = createFileRoute("/_authed/dashboard/")({
   component: RouteComponent,
   loaderDeps: ({ search }) => ({ cfyear: search.cfyear }),
   loader: async ({ deps }) => {
-    const [transactions, cashflow, yearsRange] = await Promise.all([
+    const yearsRange = await getTransactionYearsRange()
+    const currentYearFallback = yearsRange[0]
+
+    const [transactions, cashflow] = await Promise.all([
       getRecentTransactions(),
       getAnnualCashflow({
         data: {
-          year: deps.cfyear ?? today.getFullYear(),
+          year: deps.cfyear ?? currentYearFallback,
         },
       }),
-      getTransactionYearsRange(),
     ])
 
-    console.log({ cashflow })
     return {
-      cfyear: deps.cfyear ?? today.getFullYear(),
+      cfyear: deps.cfyear ?? currentYearFallback,
       cashflow,
       transactions,
       yearsRange,

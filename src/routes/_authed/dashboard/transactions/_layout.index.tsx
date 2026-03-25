@@ -4,20 +4,16 @@ import { createFileRoute } from "@tanstack/react-router"
 import z from "zod"
 import { AllTransactions } from "./-all-transactions"
 
-const today = new Date()
-
 const searchSchema = z.object({
   month: z.coerce
     .number()
     .min(1)
     .max(12)
-    .catch(today.getMonth() + 1)
     .optional(),
   year: z.coerce
     .number()
-    .min(today.getFullYear() - 100)
-    .max(today.getFullYear())
-    .catch(today.getFullYear())
+    .min(1900)
+    .max(3000)
     .optional(),
 })
 
